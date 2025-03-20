@@ -1,0 +1,45 @@
+**Game Summary: Rotation Pool Variant**
+
+- Players take turns attempting to legally pocket balls.
+- The objective is to score the most points by legally pocketing balls.
+- Fouls (marks) are tracked, and accumulating three consecutive fouls results in a penalty.
+
+**Scoring Rules**
+
+- Each legally pocketed ball awards the shooter **its numerical value** (e.g., sinking the 7-ball = 7 points).
+- Illegally pocketed balls do not award points and will be placed again on the table
+- The player with the most points at the end wins.
+
+**Turn Structure**
+
+1. **Shot Attempt**: The active player takes a shot.
+2. **Legal Shot**: A shot is legal if:
+
+- The lowest-numbered ball is hit first and the cue ball is not pocketed
+
+3. **Scoring**:
+
+- If a ball is legally pocketed, the points are added to the shooter's score and the shooter continues their turn.
+- If a legal shot is made but the player fails to pocket a ball, the fouls are reset and the game continues.
+- If no legal shot is made, a foul is committed and the turn passes to the next player unless "roll-over" is invoked.
+
+**Foul Rules & Penalty**
+
+1. A **foul** (mark) is committed when:
+
+- The cue ball fails to contact any object ball.
+- The cue ball is pocketed (The ball will be placed again on the table)
+- The lowest-numbered ball is not contacted first.
+
+2. **Three consecutive fouls (marks)** lead to a **-10 point penalty** and reset the foul count.
+
+**Turn Roll-Over Rule**
+
+- If a player fails to make a legal shot, the next player has the option to **force the previous player to shoot again** instead of taking their turn.
+
+**Endgame**
+
+- The game ends when all balls have been pocketed.
+- The player with the highest score wins.
+
+

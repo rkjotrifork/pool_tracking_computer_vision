@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotation Pool Game Tracker</title>
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url("{{ url_for('static', filename='bg.jpeg') }}") !important;
+            background-size: cover !important;
+            background-attachment: fixed !important;
+            background-position: center !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rotation Pool Game Tracker</h1>
+        </header>
+        
+        <main>
+            <div class="game-container">
+                <div class="scoreboard">
+                    <h2>Scoreboard</h2>
+                    <table id="scoreboard-table">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Fouls</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scoreboard-body">
+                            <!-- Filled by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="game-info">
+                    <h2>Game Information</h2>
+                    <div id="game-info-content">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                    
+                    <div id="last-action" class="alert">
+                        <!-- Filled by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <h2>Game Controls</h2>
+                    
+                    <div class="control-group">
+                        <button id="btn-apply-foul" class="btn danger">Apply Foul</button>
+                        <button id="btn-apply-rollover" class="btn warning">Apply Roll-over</button>
+                        <button id="btn-skip-player" class="btn info">Skip to Next Player</button>
+                        <button id="btn-new-game" class="btn secondary">New Game</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
