@@ -1,0 +1,884 @@
+/* Base styles */
+:root {
+    --primary-color: #0d4e25;  /* Dark green like pool table */
+    --secondary-color: #1a6e3c;  /* Medium green */
+    --accent-color: #3498db;  /* Blue like pool chalk */
+    --success-color: #2ecc71;  /* Green */
+    --warning-color: #f39c12;  /* Orange like the 13 ball */
+    --danger-color: #e74c3c;  /* Red like the 3 ball */
+    --light-color: #ecf0f1;  /* Light gray */
+    --dark-color: #2c3e50;  /* Dark blue */
+    --table-bg: #0d4e25;  /* Pool table green */
+    --pocket-color: #111;  /* Dark for pockets */
+    --rail-color: #8B4513;  /* Brown for rails */
+    --chalk-color: #3498db;  /* Blue chalk */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: #2c3e50;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../bg.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Header with pool table styling */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--table-bg);
+    color: white;
+    border-radius: 5px;
+    border: 10px solid var(--rail-color);
+    position: relative;
+}
+
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 90%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 100px 100px;
+    z-index: 0;
+}
+
+header h1, header h2 {
+    position: relative;
+    z-index: 1;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+header h2 {
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Main content */
+main {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: 2px solid var(--rail-color);
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--pocket-color);
+    border-radius: 50%;
+}
+
+main::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--pocket-color);
+    border-radius: 50%;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+    text-align: center;
+    min-width: 120px;
+    margin: 5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn.danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn.warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.btn.info {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn.secondary {
+    background-color: var(--dark-color);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Game container */
+.game-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .game-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .game-controls {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Scoreboard with pool table styling */
+.scoreboard {
+    background-color: var(--table-bg);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    border: 5px solid var(--rail-color);
+}
+
+.scoreboard h2 {
+    margin-bottom: 15px;
+    color: white;
+    border-bottom: 2px solid var(--chalk-color);
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+table th {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+table tr.active {
+    background-color: rgba(46, 204, 113, 0.3);
+}
+
+table tr.next {
+    background-color: rgba(243, 156, 18, 0.3);
+}
+
+/* Game info with chalk styling */
+.game-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--chalk-color);
+}
+
+.game-info h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.game-info-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.game-info-label {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Ball-styled alert */
+.alert {
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 40px;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 113, 0.2);
+    border: 1px solid var(--success-color);
+    color: var(--success-color);
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.2);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+.alert-warning {
+    background-color: rgba(243, 156, 18, 0.2);
+    border: 1px solid var(--warning-color);
+    color: var(--warning-color);
+}
+
+.alert-info {
+    background-color: rgba(52, 152, 219, 0.2);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Game controls with cue styling */
+.game-controls {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-top: 10px solid var(--rail-color);
+    position: relative;
+}
+
+.game-controls::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 10px;
+    background: linear-gradient(90deg, #8B4513 20%, #D2B48C 20%, #D2B48C 80%, #8B4513 80%);
+    border-radius: 5px 5px 0 0;
+}
+
+.game-controls h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.control-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Modal with pool table styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 5px solid var(--rail-color);
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+    background-color: var(--table-bg);
+    color: white;
+}
+
+.modal-content h3 {
+    color: white;
+    border-bottom: 2px solid var(--chalk-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-content .form-group label {
+    color: white;
+}
+
+.modal-content .form-group input {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+}
+
+.close {
+    color: white;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--chalk-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+}
+
+/* Status colors */
+.status-active {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.status-next {
+    color: var(--warning-color);
+}
+
+.status-waiting {
+    color: #777;
+}
+
+/* Game over screen */
+.game-over {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-over::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 70% 40%, rgba(255,255,255,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 90%, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 100px 100px;
+    z-index: 0;
+}
+
+.game-over h3 {
+    position: relative;
+    z-index: 1;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.winner {
+    position: relative;
+    z-index: 1;
+    font-size: 1.5rem;
+    color: gold;
+    margin: 10px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Fix for input fields in player setup */
+.player-setup-container {
+    position: relative;
+    z-index: 1;
+}
+
+.player-setup-container form {
+    position: relative;
+    z-index: 2;
+}
+
+.player-setup-container .form-group {
+    position: relative;
+    z-index: 3;
+}
+
+.player-setup-container input {
+    position: relative;
+    z-index: 4;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Make pockets appear behind the form */
+.pocket {
+    z-index: 0;
+}
+
+/* Pool ball styles */
+.pool-balls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.pool-ball {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.pool-ball:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.pool-ball.selected {
+    transform: scale(0.9);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.pool-ball.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #2ecc71;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* Solid balls */
+.pool-ball.solid {
+    color: white;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+}
+
+.pool-ball.solid-1 { background-color: #FDD835; } /* Yellow */
+.pool-ball.solid-2 { background-color: #1E88E5; } /* Blue */
+.pool-ball.solid-3 { background-color: #E53935; } /* Red */
+.pool-ball.solid-4 { background-color: #673AB7; } /* Purple */
+.pool-ball.solid-5 { background-color: #FF9800; } /* Orange */
+.pool-ball.solid-6 { background-color: #2E7D32; } /* Green */
+.pool-ball.solid-7 { background-color: #5D4037; } /* Brown */
+.pool-ball.solid-8 { background-color: #000000; } /* Black */
+
+/* Striped balls - completely new approach */
+.pool-ball.striped {
+    color: black;
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+/* Create the stripe effect with a pseudo-element */
+.pool-ball.striped::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Individual ball stripe patterns */
+.pool-ball.striped-9::before {
+    background-image: linear-gradient(transparent 30%, #FDD835 30%, #FDD835 70%, transparent 70%);
+}
+
+.pool-ball.striped-10::before {
+    background-image: linear-gradient(transparent 30%, #1E88E5 30%, #1E88E5 70%, transparent 70%);
+}
+
+.pool-ball.striped-11::before {
+    background-image: linear-gradient(transparent 30%, #E53935 30%, #E53935 70%, transparent 70%);
+}
+
+.pool-ball.striped-12::before {
+    background-image: linear-gradient(transparent 30%, #673AB7 30%, #673AB7 70%, transparent 70%);
+}
+
+.pool-ball.striped-13::before {
+    background-image: linear-gradient(transparent 30%, #FF9800 30%, #FF9800 70%, transparent 70%);
+}
+
+.pool-ball.striped-14::before {
+    background-image: linear-gradient(transparent 30%, #2E7D32 30%, #2E7D32 70%, transparent 70%);
+}
+
+.pool-ball.striped-15::before {
+    background-image: linear-gradient(transparent 30%, #5D4037 30%, #5D4037 70%, transparent 70%);
+}
+
+/* Make sure the number is on top of the stripe */
+.pool-ball.striped span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Cue ball */
+.pool-ball.cue {
+    background-color: white;
+    color: black;
+}
+
+/* Mini ball styles for game info */
+.pool-ball.mini {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    display: inline-flex;
+    margin: 0 3px;
+    cursor: default;
+}
+
+.pool-ball.mini:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.balls-on-table-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.game-info-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.game-info-label {
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 100px;
+}
+
+/* Player setup form styles */
+#player-inputs {
+    margin-bottom: 20px;
+}
+
+.buttons-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-remove-player {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-remove-player:hover {
+    background-color: #c0392b;
+}
+
+/* Styling for ball icons in alerts */
+.alert .pool-ball.mini {
+    display: inline-flex;
+    vertical-align: middle;
+    margin: 0 3px;
+}
+
+/* Score and fouls editing styles */
+.score-cell, .fouls-cell {
+    position: relative;
+}
+
+.btn-edit-score, .btn-edit-fouls {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    margin-left: 5px;
+    vertical-align: middle;
+    color: #fff;
+}
+
+.btn-edit-score:hover, .btn-edit-fouls:hover {
+    opacity: 1;
+    color: #2ecc71;
+}
+
+.score-edit, .fouls-edit {
+    width: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 4px 6px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+tr.active .score-edit, tr.active .fouls-edit {
+    background-color: rgba(46, 204, 113, 0.3);
+}
+
+tr.next .score-edit, tr.next .fouls-edit {
+    background-color: rgba(243, 156, 18, 0.3);
+}
+
+/* Ball selector in shot modal */
+#pool-balls-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(13, 78, 37, 0.1);
+    border-radius: 10px;
+}
+
+#pool-balls-selector .pool-ball {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#pool-balls-selector .pool-ball:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.pool-ball.selected {
+    border: 3px solid #2ecc71;
+}
+
+.pool-ball.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #2ecc71;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* Mini-small ball styles for pocketed balls display */
+.pool-ball.mini-small {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: inline-flex;
+    margin: 0 2px;
+    cursor: default;
+}
+
+.pocketed-balls-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.player-name-cell {
+    display: flex;
+    align-items: center;
+}
+
+/* Interactive balls styling */
+.pool-ball.mini.interactive {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pool-ball.mini.interactive:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.pool-ball.mini.interactive.selected {
+    transform: scale(0.9);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    opacity: 0.7;
+    border: 2px solid #2ecc71;
+}
+
+.pool-ball.mini.interactive.selected::after {
+    content: "✓";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #2ecc71;
+    color: white;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.selected-balls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    min-height: 30px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.no-balls-selected {
+    color: #999;
+    font-style: italic;
+}
+
+/* Updated Process Shot button to match other game control buttons */
+#btnProcessShot {
+    /* No custom styles needed - will inherit from .btn.info */
+}
+
+/* Make sure the game-controls-container uses the same styling as .control-group */
+.game-controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Protect button text from replacement */
+.button-text {
+    pointer-events: none;
+} 
