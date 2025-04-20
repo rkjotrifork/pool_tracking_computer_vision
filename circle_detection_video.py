@@ -46,6 +46,13 @@ def crop_image(image):
         [570, 364]
     ], dtype=np.int32)
 
+    # polygon = np.array([
+    #     [385, 706],
+    #     [1508, 755],
+    #     [1340, 339],
+    #     [500, 364]
+    # ], dtype=np.int32)
+
     mask = np.zeros(image.shape[:2], dtype=np.uint8)
     cv2.fillPoly(mask, [polygon], 255)
     masked = cv2.bitwise_and(image, image, mask=mask)
@@ -92,6 +99,34 @@ def filter_close_circles(circles, min_dist=9, max_peaks=100):
             if len(selected) >= max_peaks:
                 break
     return selected
+
+def filter_close_circles_largest_radius(circles, min_dist=9, max_peaks=100):
+    remaining = list(circles)
+    selected = []
+
+    while remaining and len(selected) < max_peaks:
+        # Take the first circle and find all that are close to it
+        base = remaining.pop(0)
+        group = [base]
+        bx, by = base[1], base[2]
+
+        to_remove = []
+        for i, circle in enumerate(remaining):
+            _, x, y, _ = circle
+            if math.hypot(bx - x, by - y) < min_dist:
+                group.append(circle)
+                to_remove.append(i)
+
+        # Remove grouped ones from the remaining list (reverse order for safe removal)
+        for i in reversed(to_remove):
+            del remaining[i]
+
+        # Keep the one with the largest radius from this group
+        largest = max(group, key=lambda c: c[3])  # c[3] is radius
+        selected.append(largest)
+
+    return selected
+
 
 
 def detect_circles(edges, min_r, max_r, step, threshold, max_peaks, min_dist):
@@ -146,10 +181,13 @@ def process_channel(params):
 
 
 
-def stream_video(video_path: Path):
+def stream_video(video_path: Path, output_dir: Path):
     cap = cv2.VideoCapture(str(video_path))
     if not cap.isOpened():
         raise ValueError("Could not open video.")
+
+    # Create output directory if it doesn't exist
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     cv2.namedWindow("Circle Detection", cv2.WINDOW_NORMAL)
 
@@ -160,7 +198,7 @@ def stream_video(video_path: Path):
         if not ret:
             break
 
-        if counter % 20 != 0:
+        if counter % 10 != 0:
             continue
 
         cropped_fullres, cropped_scaled = crop_image(frame)
@@ -192,12 +230,44 @@ def stream_video(video_path: Path):
             all_circles.extend(circles)
 
         # Filter combined results to remove duplicates/close ones
-        all_circles = filter_close_circles(all_circles, min_dist=12, max_peaks=16)
+        # all_circles = filter_close_circles(all_circles, min_dist=12, max_peaks=16)
+        all_circles = filter_close_circles_largest_radius(all_circles, min_dist=12, max_peaks=16)
 
         # result_frame = draw_all_circles_on_rgb(cropped, all_circles)
         result_frame = draw_all_circles_on_rgb(cropped_fullres, all_circles)
 
         cv2.imshow("Circle Detection", result_frame)
+
+        #Save minimum bounding boxes with alpha channel turned off outside circle for each circle
+        # and the filenames should be frame number and x y coordinates of circle and radius
+
+        # Save each detected circle with transparency outside
+        save_circles = False
+        if save_circles:
+            for (_, x, y, r) in all_circles:
+                x, y, r = int(x), int(y), int(r)
+                size = r * 2
+                top_left_x = max(x - r, 0)
+                top_left_y = max(y - r, 0)
+                bottom_right_x = min(x + r, cropped_fullres.shape[1])
+                bottom_right_y = min(y + r, cropped_fullres.shape[0])
+
+                roi = cropped_fullres[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+
+                # Create alpha mask
+                alpha = np.zeros((roi.shape[0], roi.shape[1]), dtype=np.uint8)
+                center = (roi.shape[1] // 2, roi.shape[0] // 2)
+                cv2.circle(alpha, center, r, (255), thickness=-1)
+
+                # Add alpha channel to image
+                bgr = roi.copy()
+                bgra = cv2.cvtColor(bgr, cv2.COLOR_BGR2BGRA)
+                bgra[:, :, 3] = alpha
+
+                # Save to file
+                filename = f"frame{counter}_x{x}_y{y}_r{r}.png"
+                cv2.imwrite(str(output_dir / filename), bgra)
+
 
         if cv2.waitKey(1) == 27:  # ESC key
             break
@@ -208,11 +278,16 @@ def stream_video(video_path: Path):
 
 if __name__ == "__main__":
     video_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\VID20250310120030.mp4")
+    # video_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\short_4_1_dropped.mp4")
+    # video_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\VID20250319123153.mp4")
+
+
+    circles_output_dir = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\circles_output")
 
     profiler = Profiler()
     profiler.start()
 
-    stream_video(video_path)
+    stream_video(video_path, circles_output_dir)
 
     profiler.stop()
     profiler.print()
