@@ -3,13 +3,12 @@ from pathlib import Path
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import skimage.color
 from scipy.stats import gaussian_kde
-from skimage.color import rgb2lab, lab2rgb
-
 from skimage.color import deltaE_ciede2000
+from skimage.color import rgb2lab, lab2rgb
 from sklearn.cluster import KMeans
 
+from ball_analysis import calculate_white_ratio
 
 # Known CIE Lab reference colors for pool balls
 # ball_colors = {
@@ -130,11 +129,6 @@ def find_color_with_kmeans2(lab_pixels, image_mask, n_clusters=3):
         quantized_lab[y, x] = cluster_colors[cluster_labels_flat[idx]]
 
     # Convert to RGB and show
-    quantized_rgb = lab2rgb(quantized_lab)
-    plt.imshow((quantized_rgb * 255).astype(np.uint8))
-    plt.axis('off')
-    plt.title("Quantized LAB Image (KMeans)")
-    plt.show()
 
     # Identify white clusters
     white_offset = 20
@@ -179,11 +173,13 @@ def find_color_with_kmeans(lab_pixels, image_mask, is_stripe=False, n_clusters=3
         quantized_lab[y, x] = cluster_colors[cluster_labels_flat[idx]]
 
     # Show quantized LAB image
-    quantized_rgb = lab2rgb(quantized_lab)
-    plt.imshow((quantized_rgb * 255).astype(np.uint8))
-    plt.axis('off')
-    plt.title("Quantized LAB Image (KMeans)")
-    plt.show()
+    plotting = False
+    if plotting:
+        quantized_rgb = lab2rgb(quantized_lab)
+        plt.imshow((quantized_rgb * 255).astype(np.uint8))
+        plt.axis('off')
+        plt.title("Quantized LAB Image (KMeans)")
+        plt.show()
 
     # Define thresholds
     white_offset = 20
@@ -221,7 +217,8 @@ def find_color_with_kmeans(lab_pixels, image_mask, is_stripe=False, n_clusters=3
 
 def closest_color(lab_val, is_stripe):
 
-    colors = ball_colors if not is_stripe else ball_colors_stripe
+    # colors = ball_colors if not is_stripe else ball_colors_stripe
+    colors = ball_colors
 
     min_dist = float('inf')
     closest_name = None
@@ -249,6 +246,15 @@ def closest_color2(lab_val, is_stripe):
     return closest_name
 
 def classify_pool_ball_from_masked_image(image_bgr, mask):
+
+    #add 1 pixel of padding to mask and image
+    mask = cv2.copyMakeBorder(mask, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=0)
+    image_bgr = cv2.copyMakeBorder(image_bgr, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=0)
+
+    #erode mask to remove noise
+    kernel = np.ones((3, 3), np.uint8)
+    mask = cv2.erode(mask, kernel, iterations=1)
+
     # Extract only masked pixels
     masked_pixels = image_bgr[mask > 0]
 
@@ -259,23 +265,16 @@ def classify_pool_ball_from_masked_image(image_bgr, mask):
     masked_rgb = cv2.cvtColor(masked_pixels.reshape(-1, 1, 3), cv2.COLOR_BGR2RGB).reshape(-1, 3)
     lab_pixels = rgb2lab(masked_rgb.reshape(1, -1, 3)).reshape(-1, 3)
 
-    # Count white pixels
-    white_color_offset=15
-    # white_pixels = lab_pixels[(np.abs(lab_pixels[:, 1]) < 5) & (np.abs(lab_pixels[:, 2]) < 5)]
-    white_pixels = lab_pixels[
-        (lab_pixels[:, 0] > 80) &
-        (np.abs(lab_pixels[:, 1]) < white_color_offset) &
-        (np.abs(lab_pixels[:, 2])  < white_color_offset)
-        ]
-    white_ratio = len(white_pixels) / len(lab_pixels)
+    # white_ratio = calculate_white_ratio_old(lab_pixels)
+    white_ratio = calculate_white_ratio(lab_pixels, mask, plotting=False)
 
     # if white_ratio > 0.5:
-    if white_ratio > 0.6:
+    if white_ratio > 0.9:
         # return "Cue Ball (white)"
         return ball_label_map[("Cue", "White")]
 
-    # is_stripe = white_ratio > 0.2
-    is_stripe = white_ratio > 0.1
+    is_stripe = white_ratio > 0.33
+    # is_stripe = white_ratio > 0.1
 
     # Exclude white pixels to find dominant color
     # color_pixels = lab_pixels[(np.abs(lab_pixels[:, 1]) > 5) | (np.abs(lab_pixels[:, 2]) > 5)]
@@ -293,17 +292,33 @@ def classify_pool_ball_from_masked_image(image_bgr, mask):
     # avg_color = np.mean(color_pixels, axis=0)
 
     # color = get_color_from_histogram_peak(color_pixels)
-    color = find_color_with_kmeans(lab_pixels, mask)
+    # color = find_color_with_kmeans(lab_pixels, mask)
     color = find_color_with_kmeans(lab_pixels, mask, is_stripe=is_stripe)
 
     main_color = closest_color(color, is_stripe) # TODO find color above also does dist calc. Make sure only done once.
 
     ball_type = "Stripe" if is_stripe else "Solid"
+
+    if main_color == "black":
+        # If the color is black, classify it as a solid ball
+        ball_type = "Solid"
+
     ball_key = (ball_type, main_color.capitalize())
 
     return ball_label_map.get(ball_key, f"Unknown_{ball_type}_{main_color}")
 
 
+def calculate_white_ratio_old(lab_pixels):
+    # Count white pixels
+    white_color_offset = 15
+    # white_pixels = lab_pixels[(np.abs(lab_pixels[:, 1]) < 5) & (np.abs(lab_pixels[:, 2]) < 5)]
+    white_pixels = lab_pixels[
+        (lab_pixels[:, 0] > 80) &
+        (np.abs(lab_pixels[:, 1]) < white_color_offset) &
+        (np.abs(lab_pixels[:, 2]) < white_color_offset)
+        ]
+    white_ratio = len(white_pixels) / len(lab_pixels)
+    return white_ratio
 
 
 if __name__ == "__main__":
@@ -311,7 +326,9 @@ if __name__ == "__main__":
     input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\circles_output")
     # input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results14\13_Striped_Orange")
 
-    output_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results19")
+    input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\wrong_predictions2")
+
+    output_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results_week17_8")
 
     ctr = 0
     for image_path in input_folder_path.glob("*.png"):
