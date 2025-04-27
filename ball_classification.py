@@ -269,7 +269,7 @@ def classify_pool_ball_from_masked_image(image_bgr, mask):
     white_ratio = calculate_white_ratio(lab_pixels, mask, plotting=False)
 
     # if white_ratio > 0.5:
-    if white_ratio > 0.9:
+    if white_ratio > 0.95:
         # return "Cue Ball (white)"
         return ball_label_map[("Cue", "White")]
 
@@ -326,9 +326,9 @@ if __name__ == "__main__":
     input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\circles_output")
     # input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results14\13_Striped_Orange")
 
-    input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\wrong_predictions2")
+    # input_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\wrong_predictions2")
 
-    output_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results_week17_8")
+    output_folder_path = Path(r"C:\Users\rkjo\OneDrive\Documents\pool_tracking\ball_classification_results_week17_9")
 
     ctr = 0
     for image_path in input_folder_path.glob("*.png"):
